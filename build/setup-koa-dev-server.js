@@ -5,6 +5,8 @@ const webpack = require("webpack");
 const chokidar = require("chokidar");
 const clientConfig = require("./webpack.client.config");
 const serverConfig = require("./webpack.server.config");
+const webpackDevMiddleware = require("./koa/dev");
+const webpackHotMiddleware = require("./koa/hot");
 
 const readFile = (fs, file) => {
   try {
@@ -52,7 +54,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
 
   // dev middleware
   const clientCompiler = webpack(clientConfig);
-  const devMiddleware = require("webpack-dev-middleware")(clientCompiler, {
+  const devMiddleware = webpackDevMiddleware(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
     noInfo: true,
   });
@@ -69,9 +71,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   });
 
   // hot middleware
-  app.use(
-    require("webpack-hot-middleware")(clientCompiler, { heartbeat: 5000 })
-  );
+  app.use(webpackHotMiddleware(clientCompiler));
 
   // watch and update server renderer
   const serverCompiler = webpack(serverConfig);
