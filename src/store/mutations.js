@@ -1,23 +1,13 @@
-import Vue from 'vue'
+import { SET_NEWS, SET_DETAIL } from "./mutations_type";
 
-export default {
-  SET_ACTIVE_TYPE: (state, { type }) => {
-    state.activeType = type
+let mumtations = {
+  [SET_NEWS](state, payload) {
+    state.news = [...payload];
+    // console.log(state.news);
   },
-
-  SET_LIST: (state, { type, ids }) => {
-    state.lists[type] = ids
+  [SET_DETAIL](state, payload) {
+    state.detail = `这是新闻 ${payload} 的详情`;
   },
+};
 
-  SET_ITEMS: (state, { items }) => {
-    items.forEach(item => {
-      if (item) {
-        Vue.set(state.items, item.id, item)
-      }
-    })
-  },
-
-  SET_USER: (state, { id, user }) => {
-    Vue.set(state.users, id, user || false) /* false means user not found */
-  }
-}
+export default mumtations;
