@@ -1,6 +1,6 @@
 <template>
   <div>
-    not found
+    没有改页面
   </div>
 </template>
 

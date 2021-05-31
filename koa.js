@@ -72,6 +72,7 @@ app.use(serve(resolve("./manifest.json")));
 app.use(serve(resolve("./dist/service-worker.js")));
 
 async function render(ctx) {
+  console.log(ctx.request.url);
   const s = Date.now();
 
   // res.setHeader("Content-Type", "text/html");
@@ -94,27 +95,14 @@ async function render(ctx) {
     title: "Vue HN 2.0", // default title
     url: ctx.request.url,
   };
-  renderer.renderToString(context, (err, html) => {
-    if (err) {
-      return handleError(err);
-    }
-    ctx.body = html;
-    if (!isProd) {
-      console.log(`whole request: ${Date.now() - s}ms`);
-    }
-  });
+  let html = await renderer.renderToString(context);
+  ctx.body = html;
 }
 
-app.use(
-  isProd
-    ? render
-    : async (ctx) => {
-        readyPromise.then(() => render(ctx));
-      }
-);
+app.use(render);
 // router.get("/", async (ctx) => {
 //   ctx.body = "这是首页";
 // });
 
-app.use(router.routes()).use(router.allowedMethods());
+// app.use(router.routes()).use(router.allowedMethods());
 app.listen(3000);
